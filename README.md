@@ -1,17 +1,17 @@
 # Projeto de Configuração de Servidor Web com Nginx na AWS
 
-Este projeto foi desenvolvido como parte do programa de bolsas da Compass Uol e tem como objetivo configurar uma instância EC2 na AWS para hospedar uma página web utilizando o servidor Nginx.
+Este projeto foi desenvolvido como parte do programa de bolsas da Compass Uol e tem como objetivo configurar uma instância EC2 na AWS para hospedar uma página web utilizando o servidor **Nginx**.
 
 ---
 
 ## Etapa 1: Configuração do Ambiente de Tarefas
 
 ### 1. Criação de uma VPC na AWS
-- Crie uma **VPC** com 2 sub-redes públicas e 2 sub-redes privadas na seção **VPC**, em **Your VPCs**.
-- Configure um **Internet Gateway** e vincule-o às sub-redes públicas, na mesma seção.
+- Crie uma **VPC** com **2 sub-redes públicas** e **2 sub-redes privadas** na seção **VPC** em **Your VPCs**.
+- Configure um **Internet Gateway** e vincule-o às sub-redes públicas.
 
 ### 2. Criação de uma Instância EC2
-- Crie uma instância EC2 na seção **EC2**, em **Instances**. A instância de exemplo foi criada com uma **AMI baseada no Amazon Linux**.
+- Crie uma instância EC2 na seção **EC2** em **Instances**. A instância de exemplo será criada com uma **AMI baseada no Amazon Linux**.
 - Adicione as tags necessárias e associe a instância à VPC criada anteriormente, colocando-a em uma sub-rede pública.
 - Crie e vincule uma chave `.pem` à instância.
 
@@ -62,7 +62,7 @@ Este projeto foi desenvolvido como parte do programa de bolsas da Compass Uol e 
   ```
 
 - Personalize a página conforme necessário. Após a edição, salve e saia do editor.
-- A página usada neste teste está neste repositório.
+- A página usada neste teste pode ser encontrada neste repositório.
 - Teste a página acessando a instância pelo seu **IP público** no navegador. Se tudo estiver configurado corretamente, a página HTML será exibida.
 
 ### 4. Configuração para Reinício Automático do Nginx
@@ -121,14 +121,73 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
 ---
 
 ## Etapa 3: Monitoramento e Notificações
-### 1. Criando Script
-- Foi criado um script Python para monitorar a disponibilidade do site.
-- O script está vinculado a esta repositório.
-- Adicione o script na pasta /home/ec2-user
+
+### 1. Criando o Script de Monitoramento
+- Foi criado um script Python para monitorar a disponibilidade do site. O script está disponível neste repositório.
+- Adicione o script à pasta `/home/ec2-user`:
 
   ```bash
-    sudo nano python3 /home/ec2-user/monitoramento.py 
+    sudo nano /home/ec2-user/monitoramento.py
   ```
-- Copie e cole o conteúdo do script, altere o URL do site para o URL do seu site, salve e saia.
 
-### 2 . Configurando o script para rodar automaticamente a cada 1 minuto
+- Copie e cole o conteúdo do script no arquivo, altere o URL para o seu site e salve.
+- Verifique se o script do Python está registrando as mensagens de disponibilidade do site no arquivo `/var/log/monitoramento.log`. Você pode monitorar esse arquivo para ver os logs das execuções do script:
+
+  ```bash
+  tail -f /var/log/monitoramento.log
+  ```
+
+- Caso esteja registrando corretamente e o NGINX estiver ativado, receberá uma mensagem informando que o site está disponível, juntamente com data e hora.
+- Se quiser testar com o site indisponível, pare a execução do NGINX:
+
+  ```bash
+  sudo systemctl stop nginx
+  ```
+
+- Após, execute novamente o comando para verificar as mensagens de disponibilidade. Dessa vez, constará que o site está indisponível. Talvez seja necessário aguardar um pouco para atualizar, já que o monitoramento é feito a cada um minuto.
+- Alternativamente, pode testar manualmente o status HTTP do site usando o comando `curl`, para garantir que o código HTTP retornado está correto quando o Nginx está parado:
+
+  ```bash
+  curl -I http://34.205.81.108/
+  ```
+
+- Quando o Nginx estiver parado, você deverá ver algo como:
+
+  ```bash
+  curl: (7) Failed to connect to 34.205.81.108 port 80: Connection refused
+  ```
+
+### 2. Configurando o Script para Execução Automática
+- Configure o script para rodar automaticamente a cada minuto, editando o arquivo crontab. Caso o crontab não esteja instalado, instale-o com os seguintes comandos:
+
+  ```bash
+  sudo yum install cronie -y
+  ```
+
+- Inicie e habilite o cron:
+
+  ```bash
+  sudo systemctl start crond
+  sudo systemctl enable crond
+  ```
+
+- Verifique se o cron está funcionando:
+
+  ```bash
+  sudo systemctl status crond
+  ```
+
+- Após feitas a instalação e a verificação, execute o seguinte comando para editar o arquivo crontab:
+
+  ```bash
+  crontab -e
+  ```
+
+- Adicione a seguinte linha para agendar a execução do script a cada minuto:
+
+  ```bash
+  * * * * * /usr/bin/python3 /home/ec2-user/monitoramento.py
+  ```
+
+- Salve e saia do editor. O script agora será executado automaticamente a cada minuto.
+```

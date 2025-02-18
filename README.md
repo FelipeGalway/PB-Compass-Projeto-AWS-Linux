@@ -4,7 +4,7 @@ Este projeto foi desenvolvido como parte do programa de bolsas da Compass Uol e 
 
 ---
 
-## Etapa 1: Configuração do Ambiente
+## Etapa 1: Configuração do Ambiente de Tarefas
 
 ### 1. Criação de uma VPC na AWS
 - Crie uma **VPC** com 2 sub-redes públicas e 2 sub-redes privadas na seção **VPC**, em **Your VPCs**.
@@ -62,6 +62,7 @@ Este projeto foi desenvolvido como parte do programa de bolsas da Compass Uol e 
   ```
 
 - Personalize a página conforme necessário. Após a edição, salve e saia do editor.
+- A página usada neste teste está neste repositório.
 - Teste a página acessando a instância pelo seu **IP público** no navegador. Se tudo estiver configurado corretamente, a página HTML será exibida.
 
 ### 4. Configuração para Reinício Automático do Nginx
@@ -118,3 +119,16 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
    O `systemd` deverá detectar que o processo foi morto e tentará reiniciar automaticamente.
 
 ---
+
+## Etapa 3: Monitoramento e Notificações
+### 1. Criando Script
+- Foi criado um script Python para monitorar a disponibilidade do site.
+- O script está vinculado a esta repositório.
+- Adicione o script na pasta /home/ec2-user
+
+  ```bash
+    sudo nano python3 /home/ec2-user/monitoramento.py 
+  ```
+- Copie e cole o conteúdo do script, altere o URL do site para o URL do seu site, salve e saia.
+
+### 2 . Configurando o script para rodar automaticamente a cada 1 minuto

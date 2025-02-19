@@ -131,10 +131,11 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
   ```
 
 - Copie e cole o conteúdo do script no arquivo, altere o URL para o seu site e salve.
-- Verifique se o script do Python está registrando as mensagens de disponibilidade do site no arquivo `/var/log/monitoramento.log`. Você pode monitorar esse arquivo para ver os logs das execuções do script:
+- Verifique se o script do Python está registrando as mensagens de disponibilidade do site no arquivo `/home/ec2-user/monitoramento.log`. Você pode monitorar esse arquivo para ver os logs das execuções do script:
 
   ```bash
-  tail -f /var/log/monitoramento.log
+  python3 /home/ec2-user/monitoramento.py
+  tail -f /home/ec2-user/monitoramento.log
   ```
 
 - Caso esteja registrando corretamente e o NGINX estiver ativado, receberá uma mensagem informando que o site está disponível, juntamente com data e hora.
@@ -145,17 +146,6 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
   ```
 
 - Após, execute novamente o comando para verificar as mensagens de disponibilidade. Dessa vez, constará que o site está indisponível. Talvez seja necessário aguardar um pouco para atualizar, já que o monitoramento é feito a cada um minuto.
-- Alternativamente, pode testar manualmente o status HTTP do site usando o comando `curl`, para garantir que o código HTTP retornado está correto quando o Nginx está parado:
-
-  ```bash
-  curl -I http://34.205.81.108/
-  ```
-
-- Quando o Nginx estiver parado, você deverá ver algo como:
-
-  ```bash
-  curl: (7) Failed to connect to 34.205.81.108 port 80: Connection refused
-  ```
 
 ### 2. Configurando o Script para Execução Automática
 - Configure o script para rodar automaticamente a cada minuto, editando o arquivo crontab. Caso o crontab não esteja instalado, instale-o com os seguintes comandos:

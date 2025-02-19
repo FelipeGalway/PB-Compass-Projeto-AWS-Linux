@@ -68,13 +68,13 @@ Este projeto foi desenvolvido como parte do programa de bolsas da Compass Uol e 
 ### 4. Configuração para Reinício Automático do Nginx
 Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga os seguintes passos:
 
-1. **Edite o arquivo de serviço do Nginx:**
+- Edite o arquivo de serviço do Nginx:
 
    ```bash
    sudo nano /etc/systemd/system/multi-user.target.wants/nginx.service
    ```
 
-2. **Adicione as seguintes linhas à seção `[Service]`:**
+- Adicione as seguintes linhas à seção `[Service]`:
 
    ```bash
    Restart=always
@@ -84,17 +84,17 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
    - **Restart=always**: Garante que o Nginx reinicie sempre que ele falhar.
    - **RestartSec=30**: Define o tempo de espera (em segundos) antes de tentar reiniciar o Nginx.
 
-3. **Salve e saia do editor.**
+- Salve e saia do editor.
 
-4. **Recarregue o `systemd` para aplicar as alterações:**
+- Recarregue o sistema para aplicar as alterações:
 
    ```bash
    sudo systemctl daemon-reload
    ```
 
-5. **Teste se a reinicialização automática funcionou simulando uma falha.**
+- Teste se a reinicialização automática funcionou simulando uma falha.
 
-   - **Obtenha o ID do processo (PID) do Nginx** com o comando:
+   - Obtenha o ID do processo (PID) do Nginx com o comando:
 
      ```bash
      ps aux | grep nginx
@@ -102,82 +102,82 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
 
    - O PID do processo mestre do Nginx será o número exibido antes de `nginx: master process`.
 
-6. **Mate o processo do Nginx** (simulando uma falha) com o comando:
+- Mate o processo do Nginx (simulando uma falha) com o comando:
 
    ```bash
    sudo kill -9 <PID>
    ```
 
-   Substitua `<PID>` pelo ID do processo mestre do Nginx (o número obtido no passo anterior).
+    - Substitua `<PID>` pelo ID do processo mestre do Nginx (o número obtido no passo anterior).
 
-7. **Verifique o status do Nginx**:
+- Verifique o status do Nginx:
 
    ```bash
    sudo systemctl status nginx
    ```
 
-   O `systemd` deverá detectar que o processo foi morto e tentará reiniciar automaticamente.
+- O `systemd` deverá detectar que o processo foi morto e tentará reiniciar automaticamente.
 
 ---
 
 ## Etapa 3: Monitoramento e Notificações
 
 ### 1. Criando o Script de Monitoramento
-- Foi criado um script Python para monitorar a disponibilidade do site. O script está disponível neste repositório.
-- Adicione o script à pasta `/home/ec2-user`:
+- Um script em Python foi desenvolvido para monitorar a disponibilidade do site. O script pode ser encontrado neste repositório.
+- Para utilizar o script, adicione-o na pasta `/home/ec2-use` com o comando:
 
   ```bash
     sudo nano /home/ec2-user/monitoramento.py
   ```
 
-- Copie e cole o conteúdo do script no arquivo, altere o URL para o seu site e salve.
-- Verifique se o script do Python está registrando as mensagens de disponibilidade do site no arquivo `/home/ec2-user/monitoramento.log`. Você pode monitorar esse arquivo para ver os logs das execuções do script:
+- Em seguida, copie e cole o conteúdo do script no arquivo, substitua o URL pelo endereço do seu site e salve o arquivo.
+- Verifique se o script do Python está registrando as mensagens de disponibilidade do site no arquivo `/home/ec2-user/monitoramento.log` com o seguinte comando:
 
   ```bash
   python3 /home/ec2-user/monitoramento.py
   tail -f /home/ec2-user/monitoramento.log
   ```
 
-- Caso esteja registrando corretamente e o NGINX estiver ativado, receberá uma mensagem informando que o site está disponível, juntamente com data e hora.
-- Se quiser testar com o site indisponível, pare a execução do NGINX:
-
-  ```bash
-  sudo systemctl stop nginx
-  ```
-
-- Após, execute novamente o comando para verificar as mensagens de disponibilidade. Dessa vez, constará que o site está indisponível. Talvez seja necessário aguardar um pouco para atualizar, já que o monitoramento é feito a cada um minuto.
+- O script exibirá uma mensagem informando se o site está disponível ou indisponível, juntamente com a data e hora da verificação.
 
 ### 2. Configurando o Script para Execução Automática
-- Configure o script para rodar automaticamente a cada minuto, editando o arquivo crontab. Caso o crontab não esteja instalado, instale-o com os seguintes comandos:
+- Para garantir que o script seja executado automaticamente a cada minuto, será necessário configurá-lo no **cron**. Caso o **cron** ainda não esteja instalado, faça isso com o comando:
 
   ```bash
   sudo yum install cronie -y
   ```
 
-- Inicie e habilite o cron:
+- Após a instalação, inicie e habilite o serviço do **cron** para que ele inicie automaticamente com o sistema:
 
   ```bash
   sudo systemctl start crond
   sudo systemctl enable crond
   ```
 
-- Verifique se o cron está funcionando:
+- Verifique se está funcionando corretamente com:
 
   ```bash
   sudo systemctl status crond
   ```
 
-- Após feitas a instalação e a verificação, execute o seguinte comando para editar o arquivo crontab:
+- Agora, edite o arquivo **crontab** para adicionar o agendamento de execução do script a cada minuto:
 
   ```bash
   crontab -e
   ```
 
-- Adicione a seguinte linha para agendar a execução do script a cada minuto:
+- Adicione a seguinte linha no arquivo para rodar o script a cada minuto:
 
   ```bash
   * * * * * /usr/bin/python3 /home/ec2-user/monitoramento.py
   ```
 
-- Salve e saia do editor. O script agora será executado automaticamente a cada minuto.
-```
+- Salve e feche o editor. Agora, o script será executado automaticamente a cada minuto.
+
+- Para testar, verifique novamente os logs do script com o comando: 
+
+  ```bash    
+    tail -f /home/ec2-user/monitoramento.log
+    ```
+
+- A cada minuto, um novo log será registrado, indicando se o site está disponível ou não naquele momento. Você pode alterar o estado do Nginx entre "disponível" e "indisponível" para testar, lembrando que o script faz a verificação a cada minuto, então será necessário aguardar um pouco para ver a atualização nos logs.

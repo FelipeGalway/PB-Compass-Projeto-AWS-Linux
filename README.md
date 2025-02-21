@@ -11,7 +11,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 - **AWS EC2**: para provisionamento de uma instância virtual na nuvem.
 - **Amazon Linux**: sistema operacional utilizado na instância EC2.
 - **Nginx**: servidor web utilizado para servir a página web.
-- **Python 3**: para desenvolvimento de um script de monitoramento do servidor.
+- **Python**: para desenvolvimento de um script de monitoramento do servidor.
 - **cron**: para agendamento da execução automática do script de monitoramento.
 - **Discord Webhooks**: para enviar notificações de indisponibilidade do site para um canal do Discord.
 
@@ -20,23 +20,32 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 ## Etapa 1: Configuração do Ambiente na AWS
 
 ### 1. Criação de uma VPC na AWS
-- Crie uma **VPC** com **2 sub-redes públicas** e **2 sub-redes privadas**. Vá até a seção **VPC** em **Your VPCs**.
-- Configure um **Internet Gateway** e associe-o às sub-redes públicas.
+- Criação da **VPC**:
+  - Acesse a seção **VPC** em **Your VPCs**. 
+  - Clique em **Create VPC** e configure a VPC com **2 sub-redes públicas** e **2 sub-redes privadas**.
+
+- Criação do **Internet Gateway**:
+  - Vá até a seção **Internet Gateways** e clique em **Create internet gateway**. 
+  - Após a criação, selecione o Internet Gateway, vá até **Actions** e escolha a opção **Attach to VPC**.
+  - Associe o gateway à VPC criada anteriormente e às sub-redes públicas.
 
 ### 2. Criação de uma Instância EC2
-- Crie uma instância EC2 na seção **EC2** em **Instances**. A instância de exemplo será criada com uma **AMI baseada no Amazon Linux**.
-- Adicione as tags necessárias e associe a instância à VPC criada anteriormente, colocando-a em uma sub-rede pública.
-- Crie e vincule uma chave **.pem** à instância para acesso SSH.
-- Associe um **Security Group** à instância, permitindo tráfego de entrada nas seguintes portas:
-  - **HTTP** (porta 80)
-  - **SSH** (porta 22)
-- Nas regras de saída, configure **All Traffic**, permitindo acesso ao IP `0.0.0.0/0`.
+- Lançamento da instância:
+  - Navegue até a seção **EC2** em **Instances** e crie uma nova instância
+  - Utilize a **Amazon Linux 2023 AMI** como imagem base para a instância.
+  - Adicione as tags necessárias e associe a instância à VPC criada anteriormente, colocando-a em uma sub-rede pública.
 
-### 3. Configuração do Acesso à Instância EC2
+- Configuração de acesso:
+  - Crie e vincule uma chave **.pem** à instância para permitir o acesso SSH.
+  - Associe um **Security Group** à instância, configurando as regras de entrada nas seguintes portas:
+    - **HTTP** (porta 80)
+    - **SSH** (porta 22)
+  - Nas regras de saída, configure **All Traffic**, permitindo acesso ao IP `0.0.0.0/0`.
+
+### 3. Acesso à Instância EC2 via SSH
 - Acesse a instância via SSH para realizar as configurações necessárias.
 - A conexão pode ser realizada utilizando o **Visual Studio Code** da seguinte maneira: 
-  - Selecione a instância na AWS. 
-  - Clique em **Connect**. 
+  - Selecione a instância na AWS e clique em **Connect**. 
   - Copie o comando exibido no campo **SSH Client** e cole no terminal do VS Code. 
   - Substitua `"nome_da_chave"` pelo caminho correto da chave, que deverá estar em `C:\Users\seu_usuario\.ssh`.
 
@@ -82,9 +91,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 - A página usada neste projeto pode ser encontrada neste repositório.
 - Teste a página acessando a instância pelo seu **IP público** no navegador. Se tudo estiver configurado corretamente, a página HTML será exibida.
 
-### 4. Configuração para Reinício Automático do Nginx
-Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga os seguintes passos:
-
+### 4. Configuração para Reinício Automático do Nginx em Caso de Falha
 - Edite o arquivo de serviço do Nginx:
 
    ```bash
@@ -102,7 +109,6 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
    - **RestartSec=30**: Define o tempo de espera (em segundos) antes de tentar reiniciar o Nginx.
 
 - Salve e saia do editor.
-
 - Recarregue o sistema para aplicar as alterações:
 
    ```bash
@@ -110,7 +116,6 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
    ```
 
 - Teste se a reinicialização automática funcionou simulando uma falha da seguinte maneira:
-
    - Obtenha o ID do processo (PID) do Nginx com o comando:
 
       ```bash
@@ -118,7 +123,6 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
       ```
 
    - O PID do processo mestre do Nginx será o número exibido antes de `nginx: master process`.
-
    - Mate o processo do Nginx (simulando uma falha) com o comando:
 
       ```bash
@@ -126,7 +130,6 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
       ```
 
    - Substitua `<PID>` pelo ID do processo mestre do Nginx.
-
    - Verifique o status do Nginx:
 
       ```bash
@@ -139,7 +142,7 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
 
 ## Etapa 3: Monitoramento e Notificações
 
-### 1. Criando o Script de Monitoramento
+### 1. Criação do Script de Monitoramento
 - Um script em Python foi desenvolvido para monitorar a disponibilidade do site. O script pode ser encontrado neste repositório.
 - Para utilizá-lo, adicione-o na pasta `/home/ec2-user` com o comando:
 
@@ -149,7 +152,7 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
 
 - Em seguida, copie e cole o conteúdo do script no arquivo.
 - Substitua `url = "http://seu_site_aqui"` pelo endereço do seu site e salve o arquivo.
-- Verifique se o script do Python está registrando as mensagens de disponibilidade do site no arquivo `/home/ec2-user/monitoramento.log`:
+- Verifique se o script está registrando as mensagens de disponibilidade do site no arquivo `/home/ec2-user/monitoramento.log`:
 
   ```bash
   python3 /home/ec2-user/monitoramento.py
@@ -158,7 +161,7 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
 
 - O script exibirá uma mensagem informando se o site está disponível ou indisponível, juntamente com a data e hora da verificação.
 
-### 2. Configurando o Script para Execução Automática
+### 2. Configuração do Script para Execução Automática
 - Para garantir que o script seja executado automaticamente a cada minuto, será necessário configurá-lo no **cron**. Caso o **cron** ainda não esteja instalado, faça isso com o comando:
 
   ```bash
@@ -199,9 +202,8 @@ Para garantir que o Nginx seja reiniciado automaticamente em caso de falha, siga
 
 - A cada minuto, um novo log será registrado, indicando se o site está disponível ou não naquele momento. Você pode alterar o estado do Nginx entre "disponível" e "indisponível" para testar, lembrando que o script faz a verificação a cada minuto, então será necessário aguardar um pouco para ver a atualização nos logs.
 
-### 3. Enviando Notificação no Discord em Caso de Indisponibilidade
+### 3. Envio de Notificação no Discord em Caso de Indisponibilidade
 - Crie um Webhook do Discord:
-
   - Vá até o seu servidor Discord, clique no nome do servidor, escolha um canal e depois clique no ícone de configurações do respectivo canal.
   - Na aba **Integrações**, clique em **Webhooks** e depois em **Criar Webhook**.
   - Dê um nome ao webhook e copie a URL do Webhook gerada.

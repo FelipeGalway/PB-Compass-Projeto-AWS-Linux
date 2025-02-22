@@ -65,6 +65,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   ```bash
   nginx -v
   ```
+![alt text](<Captura de tela 2025-02-22 114714.png>)
 
 ### 2. Configuração do Nginx
 - Inicie o Nginx e configure-o para iniciar automaticamente ao ligar a instância EC2:

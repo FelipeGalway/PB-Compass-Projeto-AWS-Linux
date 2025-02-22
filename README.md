@@ -66,7 +66,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   nginx -v
   ```
 
-![alt text](<Captura de tela 2025-02-22 114714-1.png>)
+![alt text](<Captura de tela 2025-02-22 114714-1-1.png>)
 
 ### 2. Configuração do Nginx
 - Inicie o Nginx e configure-o para iniciar automaticamente ao ligar a instância EC2:
@@ -147,7 +147,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
       sudo systemctl status nginx
       ```
 
-   - O `systemd` deverá detectar que o processo foi morto e tentará reiniciar automaticamente.
+   - O `systemd` deverá detectar que o processo foi morto e irá reiniciar automaticamente.
 
 ![alt text](<Captura de tela 2025-02-22 115022.png>)
 
@@ -242,4 +242,4 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
 - Com as notificações configuradas, aguarde a execução do script e, ao interromper o serviço do Nginx (como simular uma falha), você receberá notificações no canal do Discord escolhido.
 
-![alt text](<Captura de tela 2025-02-22 120555.png>)
+![alt text](<Captura de tela 2025-02-22 120555-1.png>)

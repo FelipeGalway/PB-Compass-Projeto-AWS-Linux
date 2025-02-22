@@ -65,7 +65,8 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   ```bash
   nginx -v
   ```
-![alt text](<Captura de tela 2025-02-22 114714.png>)
+
+![alt text](<Captura de tela 2025-02-22 114714-1.png>)
 
 ### 2. Configuração do Nginx
 - Inicie o Nginx e configure-o para iniciar automaticamente ao ligar a instância EC2:
@@ -81,6 +82,8 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   sudo systemctl status nginx
   ```
 
+![alt text](<Captura de tela 2025-02-22 114738.png>)
+
 ### 3. Criação de uma Página Web Simples
 - Crie uma página HTML para ser exibida:
 
@@ -91,6 +94,8 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 - Personalize a página conforme necessário. Após a edição, salve e saia do editor.
 - A página usada neste projeto pode ser encontrada neste repositório.
 - Teste a página acessando a instância pelo seu **IP público** no navegador. Se tudo estiver configurado corretamente, a página HTML será exibida.
+
+![alt text](<Captura de tela 2025-02-22 114846.png>)
 
 ### 4. Configuração para Reinício Automático do Nginx em Caso de Falha
 - Edite o arquivo de serviço do Nginx:
@@ -109,6 +114,8 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
    - **Restart=always**: Garante que o Nginx reinicie sempre que ele falhar.
    - **RestartSec=30**: Define o tempo de espera (em segundos) antes de tentar reiniciar o Nginx.
 
+![alt text](<Captura de tela 2025-02-22 114931.png>)
+
 - Salve e saia do editor.
 - Recarregue o sistema para aplicar as alterações:
 
@@ -124,6 +131,9 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
       ```
 
    - O PID do processo mestre do Nginx será o número exibido antes de `nginx: master process`.
+   
+![alt text](<Captura de tela 2025-02-22 114959.png>)
+   
    - Mate o processo do Nginx (simulando uma falha) com o comando:
 
       ```bash
@@ -139,6 +149,8 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
    - O `systemd` deverá detectar que o processo foi morto e tentará reiniciar automaticamente.
 
+![alt text](<Captura de tela 2025-02-22 115022.png>)
+
 ---
 
 ## Etapa 3: Monitoramento e Notificações
@@ -153,6 +165,9 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
 - Em seguida, copie e cole o conteúdo do script no arquivo.
 - Substitua `url = "http://seu_site_aqui"` pelo endereço do seu site e salve o arquivo.
+
+![alt text](<Captura de tela 2025-02-22 120739.png>)
+
 - Verifique se o script está registrando as mensagens de disponibilidade do site no arquivo `/home/ec2-user/monitoramento.log`:
 
   ```bash
@@ -161,6 +176,8 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   ```
 
 - O script exibirá uma mensagem informando se o site está disponível ou indisponível, juntamente com a data e hora da verificação.
+
+![alt text](<Captura de tela 2025-02-22 115228.png>)
 
 ### 2. Configuração do Script para Execução Automática
 - Para garantir que o script seja executado automaticamente a cada minuto, será necessário configurá-lo no **cron**. Caso o **cron** ainda não esteja instalado, faça isso com o comando:
@@ -194,6 +211,8 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   * * * * * /usr/bin/python3 /home/ec2-user/monitoramento.py
   ```
 
+![alt text](<Captura de tela 2025-02-22 115332.png>)
+
 - Salve e feche o editor. Agora, o script será executado automaticamente a cada minuto.
 - Para testar, verifique novamente os logs do script com o comando: 
 
@@ -202,6 +221,8 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   ```
 
 - A cada minuto, um novo log será registrado, indicando se o site está disponível ou não naquele momento. Você pode alterar o estado do Nginx entre "disponível" e "indisponível" para testar, lembrando que o script faz a verificação a cada minuto, então será necessário aguardar um pouco para ver a atualização nos logs.
+
+![alt text](<Captura de tela 2025-02-22 120128.png>)
 
 ### 3. Envio de Notificação no Discord em Caso de Indisponibilidade
 - Crie um Webhook do Discord:
@@ -216,4 +237,9 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   ```
 
 - Cole a URL do Webhook no campo `webhook_url = "https://discord.com/api/webhooks/SEU_WEBHOOK_AQUI"` e salve o arquivo.
-- Com as notificações configuradas, execute o script e, ao interromper o serviço do Nginx (como simular uma falha), você receberá notificações no canal do Discord escolhido.
+
+![alt text](<Captura de tela 2025-02-22 120739 - Copia.png>)
+
+- Com as notificações configuradas, aguarde a execução do script e, ao interromper o serviço do Nginx (como simular uma falha), você receberá notificações no canal do Discord escolhido.
+
+![alt text](<Captura de tela 2025-02-22 120555.png>)

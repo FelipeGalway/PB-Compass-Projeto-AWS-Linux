@@ -268,5 +268,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
 ## Conclusão
 Este projeto demonstrou com sucesso como configurar um servidor web com Nginx no COnsole AWS, automatizar o monitoramento da disponibilidade do site e enviar notificações de falhas para um canal do Discord. 
+
 Através do uso de tecnologias como Amazon EC2, Amazon VPC, Nginx, Python e cron, foi criado um ambiente com capacidade de detectar falhas e alertar os responsáveis de forma eficaz.
+
 Com essa configuração, é possível garantir que o servidor web esteja sempre ativo e disponível, além de facilitar a automação de tarefas de monitoramento e notificação. 

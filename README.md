@@ -29,20 +29,34 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   - Após a criação, selecione o Internet Gateway, vá até **Actions** e escolha a opção **Attach to VPC**.
   - Associe o gateway à VPC criada anteriormente e às sub-redes públicas.
 
-### 2. Criação de uma Instância EC2
+![alt text](<Captura de tela 2025-02-24 101838.png>)
+
+### 2. Criação de um Security Group
+- Navegue até a seção **EC2** em **Security Groups** e clique em **Create security group**. 
+- Configure as regras de entrada nas seguintes portas:
+    - **HTTP** (porta 80)
+    - **SSH** (porta 22)
+- Nas regras de saída, configure **All Traffic**, permitindo acesso ao IP `0.0.0.0/0`.
+- Finalize clicando em **Create security group**.
+
+![alt text](<Captura de tela 2025-02-24 101922.png>)
+
+![alt text](<Captura de tela 2025-02-24 101934.png>)
+
+### 3. Criação de uma Instância EC2
 - Lançamento da instância:
-  - Navegue até a seção **EC2** em **Instances** e crie uma nova instância
+  - Navegue até a seção **EC2** em **Instances** e clique em **Launch instances**.
   - Utilize a **Amazon Linux 2023 AMI** como imagem base para a instância.
   - Adicione as tags necessárias e associe a instância à VPC criada anteriormente, colocando-a em uma sub-rede pública.
 
 - Configuração de acesso:
   - Crie e vincule uma chave **.pem** à instância para permitir o acesso SSH.
-  - Associe um **Security Group** à instância, configurando as regras de entrada nas seguintes portas:
-    - **HTTP** (porta 80)
-    - **SSH** (porta 22)
-  - Nas regras de saída, configure **All Traffic**, permitindo acesso ao IP `0.0.0.0/0`.
+  - Associe a instância ao **Security Group** criado no passo anterior.
+  - Finalize a criação da instância clicando em **Launch instance**.
 
-### 3. Acesso à Instância EC2 via SSH
+![alt text](<Captura de tela 2025-02-24 103201.png>)
+
+### 4. Acesso à Instância EC2 via SSH
 - Acesse a instância via SSH para realizar as configurações necessárias.
 - A conexão pode ser realizada utilizando o **Visual Studio Code** da seguinte maneira: 
   - Selecione a instância na AWS e clique em **Connect**. 
@@ -95,7 +109,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 - A página usada neste projeto pode ser encontrada neste repositório.
 - Teste a página acessando a instância pelo seu **IP público** no navegador. Se tudo estiver configurado corretamente, a página HTML será exibida.
 
-![alt text](<Captura de tela 2025-02-22 114846.png>)
+![alt text](<Captura de tela 2025-02-24 103622.png>)
 
 ### 4. Configuração para Reinício Automático do Nginx em Caso de Falha
 - Edite o arquivo de serviço do Nginx:
@@ -150,6 +164,12 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
    - O `systemd` deverá detectar que o processo foi morto e irá reiniciar automaticamente.
 
 ![alt text](<Captura de tela 2025-02-22 115022.png>)
+
+   - Enquanto isso, a página HTML ficará fora do ar.
+
+![alt text](<Captura de tela 2025-02-24 103859.png>)
+
+   - Assim que a reinicialização estiver completa, o Nginx voltará a ficar ativo e a página HTML será exibida novamente.
 
 ---
 
@@ -243,3 +263,10 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 - Com as notificações configuradas, aguarde a execução do script e, ao interromper o serviço do Nginx (como simular uma falha), você receberá notificações no canal do Discord escolhido.
 
 ![alt text](<Captura de tela 2025-02-22 120555-1.png>)
+
+---
+
+## Conclusão
+Este projeto demonstrou com sucesso como configurar um servidor web com Nginx no COnsole AWS, automatizar o monitoramento da disponibilidade do site e enviar notificações de falhas para um canal do Discord. 
+Através do uso de tecnologias como Amazon EC2, Amazon VPC, Nginx, Python e cron, foi criado um ambiente com capacidade de detectar falhas e alertar os responsáveis de forma eficaz.
+Com essa configuração, é possível garantir que o servidor web esteja sempre ativo e disponível, além de facilitar a automação de tarefas de monitoramento e notificação. 

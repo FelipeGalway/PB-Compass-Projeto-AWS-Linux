@@ -266,6 +266,18 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
 ---
 
+## Etapa Alternativa: Usando o User Data
+Como alternativa, é possível utilizar o User Data durante a criação da instância EC2 para iniciar a instância com o Nginx instalado e configurado, a página HTML criada e o script de monitoramento pronto para execução. Para fazer isso, siga os seguintes passos:
+- Durante o processo de criação da instância, acesse a seção **Advanced Details** e role até a parte inferior até encontrar **User Data**.
+
+![alt text](<Captura de tela 2025-02-25 115430.png>)
+
+- Cole o script presente neste repositório no campo de User Data.
+- Finalize a criação da instância clicando em **Launch instance**.
+
+Com essa abordagem, não será necessário realizar manualmente a instalação do Nginx, a criação da página HTML e o script de monitoramento, pois a instância será iniciada com essas configurações já aplicadas. Contudo, você ainda precisará editar o script de monitoramento com as informações específicas do seu ambiente. O restante dos passos descritos neste guia permanece aplicável.
+
+
 ## Conclusão
 Este projeto demonstrou com sucesso como configurar um servidor web com Nginx no Console AWS, automatizar o monitoramento da disponibilidade do site e enviar notificações de falhas para um canal do Discord. 
 

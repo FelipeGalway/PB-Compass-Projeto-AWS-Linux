@@ -1,0 +1,153 @@
+#!/bin/bash
+
+# Atualizar pacotes e instalar dependências
+sudo yum update -y
+sudo yum install nginx python3 cronie -y
+
+# Iniciar e habilitar o Nginx para iniciar na inicialização
+sudo systemctl start nginx
+sudo systemctl enable nginx
+
+# Criar a página HTML para o Nginx servir
+echo "<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Projeto Linux - Felipe Ferreira Rezende</title>
+    <style>        
+        html {
+            color-scheme: light dark;
+            font-size: 16px;
+        }
+        
+        body {
+            background-color: #f0f4f8;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    
+        .content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #0056b3;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+       
+        h1:hover {
+            color: #003d7a;
+            cursor: pointer;
+        }
+
+        p:hover {
+            color: #444;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 1rem;
+            color: #777;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: #555;
+            font-weight: normal;
+        }
+
+        footer a:hover {
+            color: #0056b3;
+        }
+
+        * {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <h1>Projeto Linux + AWS</h1>
+        <p>Minha página HTML! 🎉</p>       
+        <footer>
+            <p><strong>Nome:</strong> Felipe Ferreira Rezende</p>
+            <p><strong>Instituição:</strong> Compass Uol</p>
+            <p><strong>Projeto:</strong> Linux + AWS - PB - DevSecOps</p>
+        </footer>
+    </div>
+</body>
+</html>" | sudo tee /usr/share/nginx/html/index.html
+
+# Criar o script Python de monitoramento
+sudo tee /home/ec2-user/monitoramento.py > /dev/null << 'EOF'
+import requests
+import logging
+from datetime import datetime
+
+logging.basicConfig(filename='/home/ec2-user/monitoramento.log', level=logging.INFO)
+
+url = "http://localhost"  
+
+def enviar_notificacao_discord(mensagem):
+    webhook_url = "https://discord.com/api/webhooks/SEU_WEBHOOK_AQUI"  
+    data = {"content": mensagem}
+    requests.post(webhook_url, json=data)
+
+def monitorar_site():
+    try:
+        resposta = requests.get(url, timeout=10)
+        status = resposta.status_code
+    except requests.exceptions.RequestException as e:
+        status = None
+        logging.error(f"{datetime.now()} - Erro ao tentar acessar o site: {e}")
+        mensagem = f"{datetime.now()} - Site {url} está INDISPONÍVEL devido a erro de rede: {e}"
+        logging.error(mensagem)
+        enviar_notificacao_discord(f"ALERTA: O site {url} está INDISPONÍVEL devido a erro de rede: {e}")
+        return  
+
+    data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if status != 200:
+        mensagem = f"{data_hora} - Site {url} está INDISPONÍVEL (Código HTTP: {status})"
+        logging.error(mensagem)
+        enviar_notificacao_discord(f"ALERTA: O site {url} está INDISPONÍVEL! (Código HTTP: {status})")
+    else:
+        mensagem = f"{data_hora} - Site {url} está DISPONÍVEL (Código HTTP: {status})"
+        logging.info(mensagem)
+
+if __name__ == "__main__":
+    monitorar_site()
+EOF
+
+
+

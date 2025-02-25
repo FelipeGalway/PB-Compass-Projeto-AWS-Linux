@@ -24,12 +24,12 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   - Acesse a seção **VPC** em **Your VPCs**. 
   - Clique em **Create VPC** e configure a VPC com **2 sub-redes públicas** e **2 sub-redes privadas**.
 
+![alt text](<Captura de tela 2025-02-24 101838.png>)
+
 - Criação do **Internet Gateway**:
   - Vá até a seção **Internet Gateways** e clique em **Create internet gateway**. 
   - Após a criação, selecione o Internet Gateway, vá até **Actions** e escolha a opção **Attach to VPC**.
   - Associe o gateway à VPC criada anteriormente e às sub-redes públicas.
-
-![alt text](<Captura de tela 2025-02-24 101838.png>)
 
 ### 2. Criação de um Security Group
 - Navegue até a seção **EC2** em **Security Groups** e clique em **Create security group**. 

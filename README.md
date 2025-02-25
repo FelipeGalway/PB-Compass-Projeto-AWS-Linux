@@ -277,6 +277,7 @@ Como alternativa, é possível utilizar o User Data durante a criação da inst�
 
 Com essa abordagem, não será necessário realizar manualmente a instalação do Nginx, a criação da página HTML e o script de monitoramento, pois a instância será iniciada com essas configurações já aplicadas. Contudo, você ainda precisará editar o script de monitoramento com as informações específicas do seu ambiente. O restante dos passos descritos neste guia permanece aplicável.
 
+---
 
 ## Conclusão
 Este projeto demonstrou com sucesso como configurar um servidor web com Nginx no Console AWS, automatizar o monitoramento da disponibilidade do site e enviar notificações de falhas para um canal do Discord. 

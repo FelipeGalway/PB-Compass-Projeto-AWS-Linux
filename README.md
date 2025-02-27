@@ -24,7 +24,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   - Acesse a seção **VPC** em **Your VPCs**. 
   - Clique em **Create VPC** e configure a VPC com **2 sub-redes públicas** e **2 sub-redes privadas**.
 
-![alt text](<Captura de tela 2025-02-24 101838.png>)
+![VPC](/Prints%20de%20telas/Captura%20de%20tela%202025-02-24%20101838.png)
 
 - Criação do **Internet Gateway**:
   - Vá até a seção **Internet Gateways** e clique em **Create internet gateway**. 
@@ -39,9 +39,9 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 - Nas regras de saída, configure **All Traffic**, permitindo acesso ao IP `0.0.0.0/0`.
 - Finalize clicando em **Create security group**.
 
-![alt text](<Captura de tela 2025-02-24 101922.png>)
+![Security group](/Prints%20de%20telas/Captura%20de%20tela%202025-02-24%20101922.png)
 
-![alt text](<Captura de tela 2025-02-24 101934.png>)
+![Security group](/Prints%20de%20telas/Captura%20de%20tela%202025-02-24%20101934.png)
 
 ### 3. Criação de uma Instância EC2
 - Lançamento da instância:
@@ -54,7 +54,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   - Associe a instância ao **Security Group** criado no passo anterior.
   - Finalize a criação da instância clicando em **Launch instance**.
 
-![alt text](<Captura de tela 2025-02-24 103201.png>)
+![Instância](/Prints%20de%20telas/Captura%20de%20tela%202025-02-24%20103201.png)
 
 ### 4. Acesso à Instância EC2 via SSH
 - Acesse a instância via SSH para realizar as configurações necessárias.
@@ -80,7 +80,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   nginx -v
   ```
 
-![alt text](<Captura de tela 2025-02-22 114714-1-1.png>)
+![Versão Nginx](/Prints%20de%20telas/Captura%20de%20tela%202025-02-22%20114714-1.png)
 
 ### 2. Configuração do Nginx
 - Inicie o Nginx e configure-o para iniciar automaticamente ao ligar a instância EC2:
@@ -96,7 +96,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   sudo systemctl status nginx
   ```
 
-![alt text](<Captura de tela 2025-02-22 114738.png>)
+![Status Nginx](/Prints%20de%20telas/Captura%20de%20tela%202025-02-22%20114738.png)
 
 ### 3. Criação de uma Página Web Simples
 - Crie uma página HTML para ser exibida:
@@ -109,7 +109,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 - A página usada neste projeto pode ser encontrada neste repositório.
 - Teste a página acessando a instância pelo seu **IP público** no navegador. Se tudo estiver configurado corretamente, a página HTML será exibida.
 
-![alt text](<Captura de tela 2025-02-24 103622.png>)
+![Página HTML ativa](/Prints%20de%20telas/Captura%20de%20tela%202025-02-24%20103622.png)
 
 ### 4. Configuração para Reinício Automático do Nginx em Caso de Falha
 - Edite o arquivo de serviço do Nginx:
@@ -128,7 +128,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
    - **Restart=always**: Garante que o Nginx reinicie sempre que ele falhar.
    - **RestartSec=30**: Define o tempo de espera (em segundos) antes de tentar reiniciar o Nginx.
 
-![alt text](<Captura de tela 2025-02-22 114931.png>)
+![Nginx](/Prints%20de%20telas/Captura%20de%20tela%202025-02-22%20114931.png)
 
 - Salve e saia do editor.
 - Recarregue o sistema para aplicar as alterações:
@@ -146,7 +146,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
    - O PID do processo mestre do Nginx será o número exibido antes de `nginx: master process`.
    
-![alt text](<Captura de tela 2025-02-22 114959.png>)
+![ID do processo](/Prints%20de%20telas/Captura%20de%20tela%202025-02-22%20114959.png)
    
    - Mate o processo do Nginx (simulando uma falha) com o comando:
 
@@ -163,11 +163,11 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
    - O `systemd` deverá detectar que o processo foi morto e irá reiniciar automaticamente.
 
-![alt text](<Captura de tela 2025-02-22 115022.png>)
+![Reinicialização automática Nginx](/Prints%20de%20telas/Captura%20de%20tela%202025-02-22%20115022.png)
 
    - Enquanto isso, a página HTML ficará fora do ar.
 
-![alt text](<Captura de tela 2025-02-24 103859.png>)
+![Página HTML fora do ar](/Prints%20de%20telas/Captura%20de%20tela%202025-02-24%20103859.png)
 
    - Assim que a reinicialização estiver completa, o Nginx voltará a ficar ativo e a página HTML será exibida novamente.
 
@@ -184,10 +184,6 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   ```
 
 - Em seguida, copie e cole o conteúdo do script no arquivo.
-- Substitua `url = "http://seu_site_aqui"` pelo endereço do seu site e salve o arquivo.
-
-![alt text](<Captura de tela 2025-02-22 120739.png>)
-
 - Verifique se o script está registrando as mensagens de disponibilidade do site no arquivo `/home/ec2-user/monitoramento.log`:
 
   ```bash
@@ -197,7 +193,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
 - O script exibirá uma mensagem informando se o site está disponível ou indisponível, juntamente com a data e hora da verificação.
 
-![alt text](<Captura de tela 2025-02-22 115228.png>)
+![Log de verificação](/Prints%20de%20telas/Captura%20de%20tela%202025-02-27%20111316%20-%20Copia.png)
 
 ### 2. Configuração do Script para Execução Automática
 - Para garantir que o script seja executado automaticamente a cada minuto, será necessário configurá-lo no **cron**. Caso o **cron** ainda não esteja instalado, faça isso com o comando:
@@ -231,7 +227,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
   * * * * * /usr/bin/python3 /home/ec2-user/monitoramento.py
   ```
 
-![alt text](<Captura de tela 2025-02-22 115332.png>)
+![Arquivo crontab](/Prints%20de%20telas/Captura%20de%20tela%202025-02-22%20115332.png)
 
 - Salve e feche o editor. Agora, o script será executado automaticamente a cada minuto.
 - Para testar, verifique novamente os logs do script com o comando: 
@@ -242,7 +238,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
 - A cada minuto, um novo log será registrado, indicando se o site está disponível ou não naquele momento. Você pode alterar o estado do Nginx entre "disponível" e "indisponível" para testar, lembrando que o script faz a verificação a cada minuto, então será necessário aguardar um pouco para ver a atualização nos logs.
 
-![alt text](<Captura de tela 2025-02-22 120128.png>)
+![Logs de verificação](/Prints%20de%20telas/Captura%20de%20tela%202025-02-27%20111316%20-%20Copia.png)
 
 ### 3. Envio de Notificação no Discord em Caso de Indisponibilidade
 - Crie um Webhook do Discord:
@@ -258,11 +254,11 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
 - Cole a URL do Webhook no campo `webhook_url = "https://discord.com/api/webhooks/SEU_WEBHOOK_AQUI"` e salve o arquivo.
 
-![alt text](<Captura de tela 2025-02-22 120739 - Copia.png>)
+![Script de monitoramento](/Prints%20de%20telas/Captura%20de%20tela%202025-02-27%20141913.png)
 
 - Com as notificações configuradas, aguarde a execução do script e, ao interromper o serviço do Nginx (como simular uma falha), você receberá notificações no canal do Discord escolhido.
 
-![alt text](<Captura de tela 2025-02-22 120555-1.png>)
+![Discord](/Prints%20de%20telas/Captura%20de%20tela%202025-02-27%20111124.png)
 
 ---
 
@@ -270,7 +266,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 Como alternativa, é possível utilizar o User Data durante a criação da instância EC2 para iniciar a instância com o Nginx instalado e configurado, a página HTML criada e o script de monitoramento pronto para execução. Para fazer isso, siga os seguintes passos:
 - Durante o processo de criação da instância, acesse a seção **Advanced Details** e role até a parte inferior até encontrar **User Data**.
 
-![alt text](<Captura de tela 2025-02-25 115430.png>)
+![User Data](/Prints%20de%20telas/Captura%20de%20tela%202025-02-25%20115430.png)
 
 - Cole o script presente neste repositório no campo de User Data.
 - Finalize a criação da instância clicando em **Launch instance**.

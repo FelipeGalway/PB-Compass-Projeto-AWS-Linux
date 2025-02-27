@@ -193,7 +193,7 @@ Este projeto utiliza diversas tecnologias para garantir a configuração adequad
 
 - O script exibirá uma mensagem informando se o site está disponível ou indisponível, juntamente com a data e hora da verificação.
 
-![Log de verificação](/Prints%20de%20telas/Captura%20de%20tela%202025-02-27%20111316%20-%20Copia.png)
+![Log de verificação](/Prints%20de%20telas/Captura%20de%20tela%202025-02-27%20111316.png)
 
 ### 2. Configuração do Script para Execução Automática
 - Para garantir que o script seja executado automaticamente a cada minuto, será necessário configurá-lo no **cron**. Caso o **cron** ainda não esteja instalado, faça isso com o comando:

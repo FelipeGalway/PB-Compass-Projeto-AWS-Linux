@@ -1,4 +1,3 @@
-
 # Projeto de Configuração de Servidor Web com Nginx na AWS
 
 Este projeto foi desenvolvido como parte do programa de bolsas da Compass Uol e tem como objetivo testar habilidades em Linux, AWS e automação de processos através da configuração de um ambiente de servidor web monitorado.
